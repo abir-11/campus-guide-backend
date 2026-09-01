@@ -1,0 +1,53 @@
+enum Role {
+  STUDENT
+  FACULTY
+  ADMIN
+}
+
+enum Status {
+  ACTIVE
+  BANNED
+}
+
+enum ResearchGrantStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ResourceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AchievementStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+
+enum DepartmentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum  CampusAlertStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EventStatus {
+  PENDING
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}

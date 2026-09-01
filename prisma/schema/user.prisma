@@ -1,0 +1,22 @@
+model User {
+  id             String          @id @default(uuid())
+  name           String          @db.VarChar(255)
+  email          String          @unique
+  password       String
+  role           Role            @default(STUDENT)
+  phoneNumber    String?
+  status         Status          @default(ACTIVE)
+  profiles       Profile[]
+  departmentId   String?
+  department     Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  researchGrants ResearchGrant[]
+  resources      Resource[]
+  achievements   Achievement[]
+  news           News[]
+  events         Events[]
+  campusAlerts   CampusAlert[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("users")
+}
