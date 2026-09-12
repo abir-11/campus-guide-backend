@@ -1,0 +1,30 @@
+model Service {
+  id String @id @default(uuid())
+
+  mentorId String
+  mentor   User @relation("MentorServices",fields: [mentorId],references: [id], onDelete: Cascade)
+
+  mentorName String
+
+  category    String
+  name        String
+  description String
+  fee         Decimal @db.Decimal(10, 2)
+
+  mobile String?
+  date   DateTime?
+  time   String?
+  image  String?
+
+  status ServiceStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@index([mentorId])
+  @@index([category])
+  @@index([status])
+  @@map("services")
+}

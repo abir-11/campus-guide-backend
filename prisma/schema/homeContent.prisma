@@ -1,0 +1,16 @@
+model HomeContent {
+  id String @id @default(uuid())
+
+  heroImage   String?
+  heroEyebrow String?
+  heroTitle   String
+  heroSub     String?
+
+  stats        Json
+  serviceCards Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("home_content")
+}

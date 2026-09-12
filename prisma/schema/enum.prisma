@@ -2,6 +2,7 @@ enum Role {
   STUDENT
   FACULTY
   ADMIN
+  MENTOR
 }
 
 enum Status {
@@ -50,4 +51,24 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum MentorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ServiceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CONFIRMED
+  CANCELLED
 }

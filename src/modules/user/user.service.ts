@@ -6,9 +6,6 @@ import { Role } from "../../../prisma/generated/prisma/enums";
 import { Prisma } from "../../../prisma/generated/prisma/browser";
 
 
-// ======================================================
-// CREATE USER
-// ======================================================
 
 const createUserDB = async (payload: IUser) => {
 
@@ -24,18 +21,13 @@ const createUserDB = async (payload: IUser) => {
     } = payload;
 
 
-    // --------------------------------------------------
-    // Normalize Data
-    // --------------------------------------------------
+
 
     const normalizedEmail = email.trim().toLowerCase();
 
     const normalizedName = name.trim();
 
 
-    // --------------------------------------------------
-    // Check Existing User
-    // --------------------------------------------------
 
     const isUserExist = await prisma.user.findUnique({
         where: {
@@ -75,9 +67,6 @@ const createUserDB = async (payload: IUser) => {
     }
 
 
-    // --------------------------------------------------
-    // Hash Password
-    // --------------------------------------------------
 
     const hashedPassword = await bcrypt.hash(
         password,
@@ -85,10 +74,7 @@ const createUserDB = async (payload: IUser) => {
     );
 
 
-    // --------------------------------------------------
-    // Create User + Profile
-    // Transaction
-    // --------------------------------------------------
+
 
     const user = await prisma.$transaction(
         async (transaction) => {
@@ -160,9 +146,7 @@ const createUserDB = async (payload: IUser) => {
 };
 
 
-// ======================================================
-// GET ME
-// ======================================================
+
 
 const getMe = async (userId: string) => {
     const user = await prisma.user.findUniqueOrThrow({
@@ -191,9 +175,7 @@ const getMe = async (userId: string) => {
 };
 
 
-// ======================================================
-// GET ALL USERS
-// ======================================================
+
 
 const getAllUsersDB = async (params: {
     page?: number | string;
@@ -379,9 +361,7 @@ const getAllUsersDB = async (params: {
 
 
 
-// ======================================================
-// GET SINGLE USER
-// ======================================================
+
 
 const getSingleUserDB = async (
     userId: string
@@ -418,10 +398,6 @@ const getSingleUserDB = async (
     return user;
 };
 
-
-// ======================================================
-// UPDATE USER
-// ======================================================
 
 const updateUserDB = async (
     userId: string,
@@ -585,9 +561,6 @@ const updateUserDB = async (
 };
 
 
-// ======================================================
-// DELETE USER
-// ======================================================
 
 const deleteUserDB = async (
     userId: string
@@ -618,9 +591,7 @@ const deleteUserDB = async (
 };
 
 
-// ======================================================
-// EXPORT
-// ======================================================
+
 
 export const userService = {
 

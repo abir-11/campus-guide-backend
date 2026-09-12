@@ -1,0 +1,20 @@
+model Mentor {
+    id String @id @default(uuid())
+
+    userId String @unique
+    user   User   @relation("MentorUser", fields: [userId], references: [id], onDelete: Cascade)
+
+    status     MentorStatus @default(PENDING)
+    department String?
+    rating     Float        @default(0)
+    sessions   Int          @default(0)
+    mobile     String?
+    bio        String?
+    image      String?
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @updatedAt
+
+    @@index([status])
+    @@index([department])
+    @@map("mentors")
+}
