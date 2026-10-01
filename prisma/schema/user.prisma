@@ -1,29 +1,28 @@
 model User {
-  id              String          @id @default(uuid())
-  name            String          @db.VarChar(255)
-  email           String          @unique
-  password        String
-  role            Role            @default(STUDENT)
-  phoneNumber     String?
-  status          Status          @default(ACTIVE)
-  profiles        Profile[]
-  departmentId    String?
-  department      Department?     @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  researchGrants  ResearchGrant[]
-  resources       Resource[]
-  achievements    Achievement[]
-  news            News[]
-  events          Events[]
-  campusAlerts    CampusAlert[]
-  studentBookings Booking[]       @relation("StudentBookings")
-  mentorBookings  Booking[]       @relation("MentorBookings")
-  mentorProfile   Mentor?         @relation("MentorUser")
-
-  services Service[] @relation("MentorServices")
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  mentorId  String?
+  id                   String          @id @default(uuid())
+  name                 String          @db.VarChar(255)
+  email                String          @unique
+  password             String
+  role                 Role            @default(STUDENT)
+  phoneNumber          String?
+  status               Status          @default(ACTIVE)
+  departmentId         String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  mentorId             String?
+  events               Events[]
+  achievements         Achievement[]
+  mentorBookings       Booking[]       @relation("MentorBookings")
+  studentBookings      Booking[]       @relation("StudentBookings")
+  campusAlerts         CampusAlert[]
+  mentorProfileDetails MentorProfile?
+  mentorProfile        Mentor?         @relation("MentorUser")
+  news                 News[]
+  profiles             Profile?
+  researchGrants       ResearchGrant[]
+  resources            Resource[]
+  services             Service[]       @relation("MentorServices")
+  department           Department?     @relation(fields: [departmentId], references: [id])
 
   @@map("users")
 }

@@ -1,6 +1,5 @@
 enum Role {
   STUDENT
-  FACULTY
   ADMIN
   MENTOR
 }
@@ -28,13 +27,12 @@ enum AchievementStatus {
   REJECTED
 }
 
-
 enum DepartmentStatus {
   ACTIVE
   INACTIVE
 }
 
-enum  CampusAlertStatus {
+enum CampusAlertStatus {
   ACTIVE
   INACTIVE
 }
@@ -71,4 +69,10 @@ enum BookingStatus {
   REJECTED
   CONFIRMED
   CANCELLED
+}
+
+enum MentorApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

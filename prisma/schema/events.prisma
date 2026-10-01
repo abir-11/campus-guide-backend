@@ -1,12 +1,12 @@
-model Events{
-    id          String   @id @default(uuid())
-    title       String   @db.VarChar(255)
-    description String?  @db.VarChar(255)
-    status      EventStatus   @default( UPCOMING)
-    location    String?  @db.VarChar(255)
-    approvedBy   String?  @db.VarChar(255)
-    createdBy   String
-    user        User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+model Events {
+  id          String      @id @default(uuid())
+  title       String      @db.VarChar(255)
+  description String?     @db.VarChar(255)
+  status      EventStatus @default(UPCOMING)
+  location    String?     @db.VarChar(255)
+  approvedBy  String?     @db.VarChar(255)
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  user        User        @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }

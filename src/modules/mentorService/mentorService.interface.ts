@@ -10,7 +10,6 @@ export interface IMentorServiceCreatePayload {
     mobile?: string | null;
     date?: string | Date | null;
     time?: string | null;
-    image?: string | null;
 }
 
 export interface IMentorServiceUpdatePayload {
@@ -46,7 +45,7 @@ export interface IValidatedServiceData {
 export const validateCreateMentorService = (
     payload: IMentorServiceCreatePayload
 ): Required<Omit<IValidatedServiceData, "status">> => {
-    
+
     const {
         category,
         name,
@@ -55,7 +54,6 @@ export const validateCreateMentorService = (
         mobile,
         date,
         time,
-        image,
     } = payload;
 
 
@@ -92,7 +90,7 @@ export const validateCreateMentorService = (
         mobile: mobile?.trim() || null,
         date: date ? new Date(date as string) : null,
         time: time?.trim() || null,
-        image: image?.trim() || null,
+        image: null,
     };
 };
 
@@ -104,7 +102,7 @@ export const validateCreateMentorService = (
 export const validateUpdateMentorService = (
     payload: IMentorServiceUpdatePayload
 ): IValidatedServiceData => {
-    
+
     const data: IValidatedServiceData = {};
 
     // Category Validation

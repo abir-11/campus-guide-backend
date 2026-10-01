@@ -3,11 +3,9 @@ model Department {
   departmentName String           @unique @db.VarChar(255)
   description    String?          @db.VarChar(500)
   status         DepartmentStatus @default(ACTIVE)
-
-  users          User[]
-
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  users          User[]
 
   @@index([status])
   @@map("departments")

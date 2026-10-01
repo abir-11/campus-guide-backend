@@ -24,7 +24,7 @@ router.get(
 
 router.post(
     "/create",
-    auth("ADMIN"),
+    
     DepartmentController.createDepartment
 );
 

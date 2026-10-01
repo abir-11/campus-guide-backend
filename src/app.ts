@@ -8,10 +8,11 @@ import { EventRoutes } from "./modules/eventss/events.router";
 import { DepartmentRoutes } from "./modules/departments/departments.router";
 import { userRoutes } from "./modules/user/user.router";
 import { mentorRoutes } from "./modules/mentor/mentor.router";
-import { mentorServiceRoutes } from "./modules/mentorService/mentorService.router";
 import { bookingRoutes } from "./modules/booking/booking.router";
 import { storyRoutes } from "./modules/story/story.router";
 import { homeContentRoutes } from "./modules/homeContent/homeContent.router";
+import { mentorServiceRoutes } from "./modules/mentorService/mentorService.router";
+import { mentorProfileRoutes } from "./modules/mentorProfile/mentorProfile.router";
 
 const app:Application=express();
 
@@ -36,6 +37,7 @@ app.use("/api/departments",DepartmentRoutes);
 app.use("/api/mentor-services", mentorServiceRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/mentors", mentorRoutes); 
+app.use("/api/mentors-apply",mentorProfileRoutes); 
 app.use("/api/stories", storyRoutes);
 app.use("/api/home-content", homeContentRoutes);
 

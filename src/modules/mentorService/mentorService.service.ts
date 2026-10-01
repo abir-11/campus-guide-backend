@@ -7,72 +7,86 @@ import { IMentorServiceCreatePayload, IMentorServiceUpdatePayload } from "./ment
 
 
 const createMentorServiceDB = async (
-    userId: string,
-    payload: IMentorServiceCreatePayload
+  userId: string,
+  payload: IMentorServiceCreatePayload
 ) => {
+  const user = await prisma.user.findUnique({
+   where:{
+    id: userId,
+   },
+   include:{
+    mentorProfileDetails:true,
+   }
+  });
+  console.log("Fetched User:", user); 
 
-    const { ...serviceData } = payload;
+  if (!user) {
+    throw new Error("User not found");
+  }
 
 
+  if (user.role !== Role.MENTOR) {
+    throw new Error("Only mentors can create services");
+  }
 
 
-    const mentor = await prisma.user.findUnique({
-        where: {
-            id: userId,
+  if (!user.mentorProfileDetails) {
+    throw new Error("Mentor profile not found. Please apply for a mentor profile first.");
+  }
+
+
+  if (user.mentorProfileDetails.status !== "APPROVED") {
+    throw new Error(
+      `Your mentor profile is not approved. Current status: ${user.mentorProfileDetails.status}`
+    );
+  }
+
+  const {
+    category,
+    name,
+    description,
+    fee,
+    mobile,
+    date,
+    time,
+  } = payload;
+   // Convert date to JavaScript Date
+  const serviceDate = date ? new Date(date) : null;
+
+  // Validate date
+  if (serviceDate && isNaN(serviceDate.getTime())) {
+    throw new Error("Invalid date format");
+  }
+
+  const newService = await prisma.service.create({
+    data: {
+      category,
+      name,
+      description,
+      fee,
+      mobile,
+      date: serviceDate,
+      time,
+
+      // Server-controlled fields
+      mentorId: user.id,
+      mentorName: user.name,
+      status: "PENDING",
+    },
+    include: {
+      mentor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
         },
-        include: {
-            mentorProfile: true,
-        },
-    });
+      },
+    },
+  });
 
-
-    if (!mentor) {
-        throw new Error("Mentor not found");
-    }
-
-
-    if (mentor.role !== Role.MENTOR) {
-        throw new Error("Only mentors can create services");
-    }
-
-
-    if (!mentor.mentorProfile) {
-        throw new Error("Mentor profile not found");
-    }
-
-
-    if (mentor.mentorProfile.status !== "APPROVED") {
-        throw new Error("Your mentor profile is not approved yet");
-    }
-
-
-
-    const newService = await prisma.service.create({
-        data: {
-            mentorId: mentor.id,
-            mentorName: mentor.name,
-            ...serviceData,
-            status: "PENDING",
-        },
-
-        include: {
-            mentor: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    image: true,
-                },
-            },
-        },
-    });
-
-
-    return newService;
+  return newService;
 };
-
-
-
 
 const getAllMentorServicesDB = async (params: {
     page?: number | string;
@@ -129,8 +143,7 @@ const getAllMentorServicesDB = async (params: {
                         id: true,
                         name: true,
                         email: true,
-                        image: true,
-                        mentorProfile: {
+                        mentorProfileDetails: {
                             select: {
                                 department: true,
                                 rating: true,
@@ -181,7 +194,7 @@ const getMentorServiceByIdDB = async (
                     name: true,
                     email: true,
                     image: true,
-                    mentorProfile: {
+                    mentorProfileDetails: {
                         select: {
                             department: true,
                             rating: true,
