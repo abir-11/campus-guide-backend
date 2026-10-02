@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post(
     "/create",
-    auth(),
+    auth(Role.ADMIN),
     EventController.createEvent
 );
 router.get(
@@ -24,14 +24,14 @@ router.get(
 
 router.patch(
     "/:id",
-    auth(Role.FACULTY, Role.ADMIN),
+    auth( Role.ADMIN),
     EventController.updateEvent
 );
 
 // Delete Event
 router.delete(
     "/:id",
-    auth(Role.FACULTY, Role.ADMIN),
+    auth( Role.ADMIN),
     EventController.deleteEvent
 );
 

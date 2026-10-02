@@ -76,3 +76,42 @@ enum MentorApplicationStatus {
   APPROVED
   REJECTED
 }
+
+// ── New enums for Resources, Alerts, Campus News ──────────────────────────────
+
+enum ResourceCategory {
+  ACADEMIC
+  RESEARCH
+  CAREER
+  LIBRARY
+  TOOLS
+  OTHER
+}
+
+enum AlertPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum AlertType {
+  ACADEMIC
+  EMERGENCY
+  EVENT
+  GENERAL
+  MAINTENANCE
+}
+
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum NewsCategory {
+  ACADEMIC
+  RESEARCH
+  CAMPUS_LIFE
+  SPORTS
+  ACHIEVEMENTS
+  GENERAL
+}

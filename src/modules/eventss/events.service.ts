@@ -19,8 +19,7 @@ const createEventDB = async (
     }
 
     const isAutoApproved =
-        user.role === Role.ADMIN ||
-        user.role === Role.FACULTY;
+        user.role === Role.ADMIN;
 
     const event = await prisma.events.create({
         data: {
@@ -205,8 +204,7 @@ const updateEventDB = async (
     // Only creator, ADMIN or FACULTY can update
     const isOwner = event.createdBy === user.id;
     const isAdminOrFaculty =
-        user.role === "ADMIN" ||
-        user.role === "FACULTY";
+        user.role === "ADMIN";
 
     if (!isOwner && !isAdminOrFaculty) {
         throw new Error(
@@ -267,8 +265,7 @@ const deleteEventDB = async (
     const isOwner = event.createdBy === user.id;
 
     const isAdminOrFaculty =
-        user.role === "ADMIN" ||
-        user.role === "FACULTY";
+        user.role === "ADMIN";
 
     if (!isOwner && !isAdminOrFaculty) {
         throw new Error(
