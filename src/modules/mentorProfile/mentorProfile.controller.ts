@@ -68,9 +68,26 @@ const updateApplicationStatus = async (req: Request, res: Response) => {
         });
     }
 };
+const getApprovedMentors = async (req: Request, res: Response) => {
+  try {
+    const result = await mentorProfileServices.getApprovedMentorsDB(req.query);
 
+    res.status(200).json({
+      success: true,
+      message: "Approved mentors retrieved successfully",
+      meta: result.meta,
+      data: result.data,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to fetch approved mentors",
+    });
+  }
+};
 export const mentorProfileController = {
     applyForMentor,
     getPendingApplications,
     updateApplicationStatus,
+    getApprovedMentors,
 };

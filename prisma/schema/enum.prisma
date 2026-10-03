@@ -68,7 +68,25 @@ enum BookingStatus {
   ACCEPTED
   REJECTED
   CONFIRMED
+  IN_PROGRESS
+  COMPLETED
   CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  HELD
+  RELEASED
+  REFUNDED
+  FAILED
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
 }
 
 enum MentorApplicationStatus {

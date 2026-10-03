@@ -89,93 +89,91 @@ const createMentorServiceDB = async (
 };
 
 const getAllMentorServicesDB = async (params: {
-    page?: number | string;
-    limit?: number | string;
-    searchTerm?: string;
+  page?: number | string;
+  limit?: number | string;
+  searchTerm?: string;
+  status?: string; // 👈 status রিসিভ করার সুযোগ যোগ করা হলো
+  mentorId?: string; // 👈 mentorId ফিল্টার করার অপশন
 }) => {
+  const page = Math.max(Number(params?.page) || 1, 1);
+  const limit = Math.min(Math.max(Number(params?.limit) || 10, 1), 100);
+  const skip = (page - 1) * limit;
 
+  const andConditions: Prisma.ServiceWhereInput[] = [];
 
-
-    const page = Math.max(Number(params?.page) || 1, 1);
-    const limit = Math.min(Math.max(Number(params?.limit) || 10, 1), 100);
-    const skip = (page - 1) * limit;
-
-
-
-
-
-    const andConditions: Prisma.ServiceWhereInput[] = [];
-
-    // Only fetch APPROVED services
+  // 🟢 যদি নির্দিষ্ট status পাঠানো হয় তবে সেটি ফিল্টার করবে, 
+  // নতুবা status পাঠানো না থাকলে সব সার্ভিস রিটার্ন করবে (অথবা আপনার প্রয়োজন অনুযায়ী কন্ডিশন সেট করতে পারেন)
+  if (params?.status) {
     andConditions.push({
-        status: "APPROVED",
+      status: params.status as any,
     });
+  }
 
-    // Optional: Add searchTerm logic if needed
-    if (params?.searchTerm) {
-        const searchTerm = params.searchTerm.trim();
-        andConditions.push({
-            OR: [
-                { mentorName: { contains: searchTerm, mode: "insensitive" } },
-                // Add other searchable fields here like title, etc.
-            ],
-        });
-    }
+  // 特定 mentor এর সার্ভিস ফিল্টার করতে
+  if (params?.mentorId) {
+    andConditions.push({
+      mentorId: params.mentorId,
+    });
+  }
 
-    const where: Prisma.ServiceWhereInput = {
-        AND: andConditions,
-    };
+  // SearchTerm logic
+  if (params?.searchTerm) {
+    const searchTerm = params.searchTerm.trim();
+    andConditions.push({
+      OR: [
+        { name: { contains: searchTerm, mode: "insensitive" } },
+        { mentorName: { contains: searchTerm, mode: "insensitive" } },
+        { category: { contains: searchTerm, mode: "insensitive" } },
+      ],
+    });
+  }
 
+  const where: Prisma.ServiceWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
-
-
-    const [services, total] = await Promise.all([
-        prisma.service.findMany({
-            where,
-            skip,
-            take: limit,
-            orderBy: {
-                createdAt: "desc",
+  const [services, total] = await Promise.all([
+    prisma.service.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        mentor: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            mentorProfileDetails: {
+              select: {
+                department: true,
+                rating: true,
+                sessions: true,
+                mobile: true,
+                bio: true,
+              },
             },
-            include: {
-                mentor: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        mentorProfileDetails: {
-                            select: {
-                                department: true,
-                                rating: true,
-                                sessions: true,
-                                mobile: true,
-                                bio: true,
-                            },
-                        },
-                    },
-                },
-            },
-        }),
-
-        prisma.service.count({
-            where,
-        }),
-    ]);
-
-
-
-
-    return {
-        meta: {
-            page,
-            limit,
-            total,
-            totalPage: Math.ceil(total / limit),
+          },
         },
-        data: services,
-    };
-};
+      },
+    }),
 
+    prisma.service.count({
+      where,
+    }),
+  ]);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage: Math.ceil(total / limit),
+    },
+    data: services,
+  };
+};
 
 
 const getMentorServiceByIdDB = async (

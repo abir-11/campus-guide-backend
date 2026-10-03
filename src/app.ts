@@ -13,18 +13,24 @@ import { storyRoutes } from "./modules/story/story.router";
 import { homeContentRoutes } from "./modules/homeContent/homeContent.router";
 import { mentorServiceRoutes } from "./modules/mentorService/mentorService.router";
 import { mentorProfileRoutes } from "./modules/mentorProfile/mentorProfile.router";
-import { resourceRoutes } from "./modules/resource/resource.router";
+import { resourceRoutes }   from "./modules/resource/resource.router";
 import { campusAlertRoutes } from "./modules/campusAlert/campusAlert.router";
-import { campusNewsRoutes } from "./modules/campusNews/campusNews.router";
+import { campusNewsRoutes }  from "./modules/campusNews/campusNews.router";
+import { paymentRoutes }     from "./modules/payment/payment.router";
+import { payoutRoutes }      from "./modules/payout/payout.router";
 
 const app: Application = express();
 
-app.use(
-  cors({
-    origin: config.app_url,
-    credentials: true,
-  })
-);
+// Backend app.ts / main.ts
+
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://campus-guide-frontend.vercel.app' 
+  ],
+  credentials: true,
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,9 +53,11 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/home-content", homeContentRoutes);
 
 // New routes
-app.use("/api/resources", resourceRoutes);
-app.use("/api/alerts", campusAlertRoutes);
-app.use("/api/campus-news", campusNewsRoutes);
+app.use("/api/resources",    resourceRoutes);
+app.use("/api/alerts",       campusAlertRoutes);
+app.use("/api/campus-news",  campusNewsRoutes);
+app.use("/api/payments",     paymentRoutes);
+app.use("/api/payouts",      payoutRoutes);
 
 // ── Global error handler ──────────────────────────────────────────────────────
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

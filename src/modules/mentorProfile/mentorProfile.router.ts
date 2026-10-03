@@ -22,5 +22,5 @@ router.patch(
      auth(Role.ADMIN), 
     mentorProfileController.updateApplicationStatus
 );
-
+router.get("/approved", mentorProfileController.getApprovedMentors);
 export const mentorProfileRoutes = router;

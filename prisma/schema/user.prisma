@@ -23,6 +23,10 @@ model User {
   resources            Resource[]
   services             Service[]       @relation("MentorServices")
   department           Department?     @relation(fields: [departmentId], references: [id])
+  // Payment relations
+  studentPayments      Payment[]       @relation("StudentPayments")
+  mentorPayments       Payment[]       @relation("MentorPayments")
+  mentorPayouts        Payout[]        @relation("MentorPayouts")
 
   @@map("users")
 }

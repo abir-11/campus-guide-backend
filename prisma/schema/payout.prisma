@@ -1,0 +1,19 @@
+model Payout {
+  id          String       @id @default(uuid())
+  paymentId   String
+  bookingId   String
+  mentorId    String
+  amount      Decimal      @db.Decimal(10, 2)
+  status      PayoutStatus @default(PENDING)
+  releasedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  payment  Payment  @relation(fields: [paymentId],  references: [id], onDelete: Cascade)
+  booking  Booking  @relation(fields: [bookingId],  references: [id], onDelete: Cascade)
+  mentor   User     @relation("MentorPayouts", fields: [mentorId], references: [id], onDelete: Cascade)
+
+  @@index([mentorId])
+  @@index([status])
+  @@map("payouts")
+}

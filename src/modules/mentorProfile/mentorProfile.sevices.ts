@@ -162,8 +162,73 @@ const updateMentorApplicationStatusDB = async (
     return result;
 };
 
+// ... আপনার বিদ্যমান অন্যান্য interfaces এবং functions
+
+const getApprovedMentorsDB = async (params: {
+  page?: number | string;
+  limit?: number | string;
+  searchTerm?: string;
+}) => {
+  const page = Math.max(Number(params?.page) || 1, 1);
+  const limit = Math.min(
+    Math.max(Number(params?.limit) || 10, 1),
+    100
+  );
+  const skip = (page - 1) * limit;
+
+  const where: Prisma.MentorProfileWhereInput = {
+    status: "APPROVED",
+    ...(params?.searchTerm && {
+      OR: [
+        { department: { contains: params.searchTerm, mode: "insensitive" } },
+        { bio: { contains: params.searchTerm, mode: "insensitive" } },
+        {
+          user: {
+            name: { contains: params.searchTerm, mode: "insensitive" },
+          },
+        },
+      ],
+    }),
+  };
+
+  const [mentors, total] = await Promise.all([
+    prisma.mentorProfile.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    }),
+    prisma.mentorProfile.count({
+      where,
+    }),
+  ]);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage: Math.ceil(total / limit),
+    },
+    data: mentors,
+  };
+};
+
 export const mentorProfileServices = {
-    applyForMentorDB,
-    getPendingMentorApplicationsDB,
-    updateMentorApplicationStatusDB,
+  applyForMentorDB,
+  getPendingMentorApplicationsDB,
+  getApprovedMentorsDB, // <--- Add this
+  updateMentorApplicationStatusDB,
 };

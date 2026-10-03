@@ -1,0 +1,30 @@
+model Payment {
+  id            String        @id @default(uuid())
+  bookingId     String        @unique
+  studentId     String
+  mentorId      String
+  amount        Decimal       @db.Decimal(10, 2)
+  platformFee   Decimal       @default(0) @db.Decimal(10, 2)
+  mentorAmount  Decimal       @db.Decimal(10, 2)
+  currency      String        @default("BDT")
+  status        PaymentStatus @default(PENDING)
+  // Gateway-provided reference (empty until a real gateway is connected)
+  transactionId String?       @db.VarChar(255)
+  provider      String        @default("manual")
+  paidAt        DateTime?
+  heldAt        DateTime?
+  releasedAt    DateTime?
+  refundedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  booking  Booking  @relation(fields: [bookingId],  references: [id], onDelete: Cascade)
+  student  User     @relation("StudentPayments",  fields: [studentId],  references: [id], onDelete: Cascade)
+  mentor   User     @relation("MentorPayments",   fields: [mentorId],   references: [id], onDelete: Cascade)
+  payouts  Payout[]
+
+  @@index([status])
+  @@index([studentId])
+  @@index([mentorId])
+  @@map("payments")
+}

@@ -11,7 +11,7 @@ router.post(
     EventController.createEvent
 );
 router.get(
-    "/",auth(),
+    "/",
     EventController.getAllEvents
 );
 
